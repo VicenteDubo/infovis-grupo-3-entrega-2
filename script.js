@@ -526,8 +526,8 @@ function initializeSoundControl() {
             console.log('Sonidos activados');
         } else {
             this.textContent = '🔊 Activar Sonidos Interactivos';
-            this.style.backgroundColor = '#10b981';
-            this.style.borderColor = '#10b981';
+            this.style.backgroundColor = '#0ea5e9';
+            this.style.borderColor = '#0ea5e9';
             stopAllSounds();
             console.log('Sonidos desactivados');
         }
@@ -551,8 +551,8 @@ function initializeDualSoundControl() {
         dualSoundsEnabled = !dualSoundsEnabled;
         
         if (dualSoundsEnabled) {
-            this.style.backgroundColor = '#10b981';
-            this.style.borderColor = '#10b981';
+            this.style.backgroundColor = '#0ea5e9';
+            this.style.borderColor = '#0ea5e9';
             this.textContent = '🎵 Sonidos Superpuestos';
             console.log('Sonidos duales activados');
         } else {
