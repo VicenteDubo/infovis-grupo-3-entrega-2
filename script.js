@@ -7,6 +7,7 @@ let soundsEnabled = false; // Control de sonidos
 let dualSoundsEnabled = false; // Control de sonidos duales en barras
 let currentHighlightedCountry = null; // País actualmente resaltado
 let barChartData = null; // Datos del gráfico de barras para referencia
+let selectedCountry = null; // País seleccionado permanentemente
 
 // Cargar y configurar sonidos
 const coinsSound = new Audio('coins.wav');
@@ -561,6 +562,14 @@ function initializeDualSoundControl() {
             console.log('Sonidos duales desactivados');
         }
     });
+    
+    // Event listener para el botón de deselección
+    const deselectBtn = document.getElementById('deselect-country');
+    if (deselectBtn) {
+        deselectBtn.addEventListener('click', function() {
+            deselectCountry();
+        });
+    }
 }
 
 // Función para resaltar barra en el gráfico de barras
@@ -734,6 +743,10 @@ function highlightCountryInMap(countryName) {
         if (i === countryIndex) {
             return value; // Mostrar el país seleccionado
         }
+        // Si hay un país seleccionado permanentemente, mostrarlo también
+        if (selectedCountry && healthData[i].Country === selectedCountry) {
+            return sourceData[i];
+        }
         return isCountryActive(healthData[i].Country, countries[i]) ? value : null;
     });
     
@@ -750,6 +763,60 @@ function highlightCountryInMap(countryName) {
 // Función para quitar el resaltado del mapa
 function removeMapHighlight() {
     updateMap(); // Usar la función existente para restaurar el estado normal
+}
+
+// Función para seleccionar un país permanentemente
+function selectCountry(countryName) {
+    selectedCountry = countryName;
+    console.log('País seleccionado:', countryName);
+    
+    // Mostrar botón de deselección
+    const deselectBtn = document.getElementById('deselect-country');
+    if (deselectBtn) {
+        deselectBtn.style.display = 'inline-block';
+        deselectBtn.textContent = `❌ Deseleccionar ${countryName}`;
+    }
+    
+    // Resaltar en el mapa
+    highlightCountryInMap(countryName);
+    
+    // Resaltar en el gráfico de barras
+    highlightBarInChart(countryName);
+    
+    // Reproducir sonidos si están activados
+    if (soundsEnabled) {
+        const countryData = healthData.find(d => d.Country === countryName);
+        if (countryData) {
+            if (currentView === 'spending') {
+                playSynchronizedSounds(countryName, countryData.PublicHealthSpendingPerCapita, countryData.LifeExpectancy);
+            } else if (currentView === 'lifeExpectancy') {
+                playSynchronizedSounds(countryName, countryData.PublicHealthSpendingPerCapita, countryData.LifeExpectancy);
+            }
+        }
+    }
+}
+
+// Función para deseleccionar el país actual
+function deselectCountry() {
+    if (selectedCountry) {
+        console.log('Deseleccionando país:', selectedCountry);
+        selectedCountry = null;
+        
+        // Ocultar botón de deselección
+        const deselectBtn = document.getElementById('deselect-country');
+        if (deselectBtn) {
+            deselectBtn.style.display = 'none';
+        }
+        
+        // Restaurar el mapa
+        updateMap();
+        
+        // Quitar resaltado del gráfico de barras
+        removeBarHighlight();
+        
+        // Detener sonidos
+        stopAllSounds();
+    }
 }
 
 // Función para inicializar los filtros
@@ -1228,8 +1295,32 @@ function createInteractiveMap(){
         
         // Event listener para unhover (cuando se sale del país)
         mapDiv.on('plotly_unhover', function() {
+            // Solo detener sonidos y quitar resaltado si no hay país seleccionado
+            if (!selectedCountry) {
             stopAllSounds();
-            removeBarHighlight();
+                removeBarHighlight();
+            }
+        });
+        
+        // Event listener para click (selección permanente)
+        mapDiv.on('plotly_click', function(eventData) {
+            const point = eventData.points[0];
+            const countryIndex = point.pointIndex;
+            const countryName = countryNames[countryIndex];
+            const countryCode = countries[countryIndex];
+            
+            // Solo permitir selección si el país está activo
+            if (!isCountryActive(countryName, countryCode)) {
+                return;
+            }
+            
+            // Si ya está seleccionado, deseleccionar
+            if (selectedCountry === countryName) {
+                deselectCountry();
+            } else {
+                // Seleccionar el nuevo país
+                selectCountry(countryName);
+            }
         });
         
         // Event listeners para detectar cambio de vista mediante los botones
@@ -1363,8 +1454,27 @@ function createCorrelationMap(){
         
         // Event listener para unhover en el gráfico de dispersión
         scatterDiv.on('plotly_unhover', function() {
-            stopAllSounds();
-            removeBarHighlight();
+            // Solo detener sonidos y quitar resaltado si no hay país seleccionado
+            if (!selectedCountry) {
+                stopAllSounds();
+                removeBarHighlight();
+            }
+        });
+        
+        // Event listener para click en el gráfico de dispersión (selección permanente)
+        scatterDiv.on('plotly_click', function(eventData) {
+            const point = eventData.points[0];
+            const countryName = point.text;
+            
+            if (countryName) {
+                // Si ya está seleccionado, deseleccionar
+                if (selectedCountry === countryName) {
+                    deselectCountry();
+                } else {
+                    // Seleccionar el nuevo país
+                    selectCountry(countryName);
+                }
+            }
         });
     });
 }
@@ -1499,8 +1609,27 @@ function graficar() {
             
             // Event listener para unhover en el gráfico de barras
             graficoDiv.on('plotly_unhover', function() {
-                stopAllSounds();
-                removeMapHighlight();
+                // Solo detener sonidos y quitar resaltado si no hay país seleccionado
+                if (!selectedCountry) {
+                    stopAllSounds();
+                    removeMapHighlight();
+                }
+            });
+            
+            // Event listener para click en el gráfico de barras (selección permanente)
+            graficoDiv.on('plotly_click', function(eventData) {
+                const point = eventData.points[0];
+                const countryName = point.x;
+                
+                if (countryName) {
+                    // Si ya está seleccionado, deseleccionar
+                    if (selectedCountry === countryName) {
+                        deselectCountry();
+                    } else {
+                        // Seleccionar el nuevo país
+                        selectCountry(countryName);
+                    }
+                }
             });
         });
         
