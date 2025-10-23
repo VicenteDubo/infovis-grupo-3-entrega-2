@@ -5,6 +5,7 @@ let selectedRegions = ['all']; // Regiones activas
 let selectedCountries = []; // Países específicos seleccionados
 let soundsEnabled = false; // Control de sonidos
 let dualSoundsEnabled = false; // Control de sonidos duales en barras
+let parallelMapsEnabled = false; // Control de mapas en paralelo
 let currentHighlightedCountry = null; // País actualmente resaltado
 let barChartData = null; // Datos del gráfico de barras para referencia
 let selectedCountry = null; // País seleccionado permanentemente
@@ -169,7 +170,7 @@ function playBeepSoundFallback(lifeExpectancy) {
     if (lifeExpectancy < 50) {
         console.log('🚨 CRÍTICO (<50 años) - extremadamente rápido');
     beepSound.currentTime = 0;
-        beepSound.volume = 0.5;
+        beepSound.volume = 0.8;
     beepSound.play().catch(e => console.log('Error playing beep:', e));
     
     beepInterval = setInterval(() => {
@@ -183,7 +184,7 @@ function playBeepSoundFallback(lifeExpectancy) {
     } else if (lifeExpectancy >= 50 && lifeExpectancy < 52.5) {
         console.log('🚨 Ritmo de emergencia (50-52.5 años) - muy rápido');
         beepSound.currentTime = 0;
-        beepSound.volume = 0.45;
+        beepSound.volume = 0.75;
             beepSound.play().catch(e => console.log('Error playing beep:', e));
         
         beepInterval = setInterval(() => {
@@ -197,7 +198,7 @@ function playBeepSoundFallback(lifeExpectancy) {
     } else if (lifeExpectancy >= 52.5 && lifeExpectancy < 55) {
         console.log('⚡ Ritmo crítico (52.5-55 años) - rápido');
         beepSound.currentTime = 0;
-        beepSound.volume = 0.4;
+        beepSound.volume = 0.7;
         beepSound.play().catch(e => console.log('Error playing beep:', e));
         
         beepInterval = setInterval(() => {
@@ -211,7 +212,7 @@ function playBeepSoundFallback(lifeExpectancy) {
     } else if (lifeExpectancy >= 55 && lifeExpectancy < 57.5) {
         console.log('🏃 Ritmo acelerado (55-57.5 años) - moderado rápido');
         beepSound.currentTime = 0;
-        beepSound.volume = 0.38;
+        beepSound.volume = 0.65;
         beepSound.play().catch(e => console.log('Error playing beep:', e));
         
         beepInterval = setInterval(() => {
@@ -225,7 +226,7 @@ function playBeepSoundFallback(lifeExpectancy) {
     } else if (lifeExpectancy >= 57.5 && lifeExpectancy < 60) {
         console.log('💓 Ritmo rápido (57.5-60 años) - moderado');
         beepSound.currentTime = 0;
-        beepSound.volume = 0.35;
+        beepSound.volume = 0.6;
         beepSound.play().catch(e => console.log('Error playing beep:', e));
         
         beepInterval = setInterval(() => {
@@ -239,7 +240,7 @@ function playBeepSoundFallback(lifeExpectancy) {
     } else if (lifeExpectancy >= 60 && lifeExpectancy < 62.5) {
         console.log('❤️ Ritmo moderado (60-62.5 años) - moderado lento');
         beepSound.currentTime = 0;
-        beepSound.volume = 0.32;
+        beepSound.volume = 0.55;
         beepSound.play().catch(e => console.log('Error playing beep:', e));
         
         beepInterval = setInterval(() => {
@@ -253,7 +254,7 @@ function playBeepSoundFallback(lifeExpectancy) {
     } else if (lifeExpectancy >= 62.5 && lifeExpectancy < 65) {
         console.log('❤️ Ritmo moderado (62.5-65 años) - lento');
         beepSound.currentTime = 0;
-        beepSound.volume = 0.3;
+        beepSound.volume = 0.5;
         beepSound.play().catch(e => console.log('Error playing beep:', e));
         
         beepInterval = setInterval(() => {
@@ -267,7 +268,7 @@ function playBeepSoundFallback(lifeExpectancy) {
     } else if (lifeExpectancy >= 65 && lifeExpectancy < 67.5) {
         console.log('💚 Ritmo cardíaco sano (65-67.5 años) - lento moderado');
         beepSound.currentTime = 0;
-        beepSound.volume = 0.28;
+        beepSound.volume = 0.45;
         beepSound.play().catch(e => console.log('Error playing beep:', e));
         
         beepInterval = setInterval(() => {
@@ -281,7 +282,7 @@ function playBeepSoundFallback(lifeExpectancy) {
     } else if (lifeExpectancy >= 67.5 && lifeExpectancy < 70) {
         console.log('💚 Ritmo cardíaco sano (67.5-70 años) - muy lento');
         beepSound.currentTime = 0;
-        beepSound.volume = 0.25;
+        beepSound.volume = 0.4;
         beepSound.play().catch(e => console.log('Error playing beep:', e));
         
         beepInterval = setInterval(() => {
@@ -295,7 +296,7 @@ function playBeepSoundFallback(lifeExpectancy) {
     } else if (lifeExpectancy >= 70 && lifeExpectancy < 72.5) {
         console.log('💚 Ritmo cardíaco muy sano (70-72.5 años) - muy lento');
         beepSound.currentTime = 0;
-        beepSound.volume = 0.22;
+        beepSound.volume = 0.35;
         beepSound.play().catch(e => console.log('Error playing beep:', e));
         
         beepInterval = setInterval(() => {
@@ -309,7 +310,7 @@ function playBeepSoundFallback(lifeExpectancy) {
     } else if (lifeExpectancy >= 72.5 && lifeExpectancy < 75) {
         console.log('💚 Ritmo cardíaco muy sano (72.5-75 años) - extremadamente lento');
         beepSound.currentTime = 0;
-        beepSound.volume = 0.2;
+        beepSound.volume = 0.3;
         beepSound.play().catch(e => console.log('Error playing beep:', e));
         
         beepInterval = setInterval(() => {
@@ -323,7 +324,7 @@ function playBeepSoundFallback(lifeExpectancy) {
     } else if (lifeExpectancy >= 75 && lifeExpectancy < 77.5) {
         console.log('💚 Ritmo cardíaco muy sano (75-77.5 años) - extremadamente lento');
         beepSound.currentTime = 0;
-        beepSound.volume = 0.18;
+        beepSound.volume = 0.25;
         beepSound.play().catch(e => console.log('Error playing beep:', e));
         
         beepInterval = setInterval(() => {
@@ -337,7 +338,7 @@ function playBeepSoundFallback(lifeExpectancy) {
     } else if (lifeExpectancy >= 77.5 && lifeExpectancy < 80) {
         console.log('💚 Ritmo cardíaco muy sano (77.5-80 años) - extremadamente lento');
         beepSound.currentTime = 0;
-        beepSound.volume = 0.16;
+        beepSound.volume = 0.2;
         beepSound.play().catch(e => console.log('Error playing beep:', e));
         
         beepInterval = setInterval(() => {
@@ -365,7 +366,7 @@ function playBeepSoundFallback(lifeExpectancy) {
     } else if (lifeExpectancy >= 82.5 && lifeExpectancy < 85) {
         console.log('💚 Ritmo cardíaco muy sano (82.5-85 años) - muy extremadamente lento');
         beepSound.currentTime = 0;
-        beepSound.volume = 0.14;
+        beepSound.volume = 0.18;
         beepSound.play().catch(e => console.log('Error playing beep:', e));
         
         beepInterval = setInterval(() => {
@@ -393,7 +394,7 @@ function playBeepSoundFallback(lifeExpectancy) {
     } else if (lifeExpectancy >= 87.5 && lifeExpectancy < 90) {
         console.log('💚 Ritmo cardíaco muy sano (87.5-90 años) - muy extremadamente lento');
         beepSound.currentTime = 0;
-        beepSound.volume = 0.12;
+        beepSound.volume = 0.15;
         beepSound.play().catch(e => console.log('Error playing beep:', e));
         
         beepInterval = setInterval(() => {
@@ -407,7 +408,7 @@ function playBeepSoundFallback(lifeExpectancy) {
     } else if (lifeExpectancy >= 90) {
         console.log('💚 Ritmo cardíaco muy sano (90+ años) - muy extremadamente lento');
         beepSound.currentTime = 0;
-        beepSound.volume = 0.1;
+        beepSound.volume = 0.12;
         beepSound.play().catch(e => console.log('Error playing beep:', e));
         
         beepInterval = setInterval(() => {
@@ -553,12 +554,12 @@ function initializeDualSoundControl() {
         if (dualSoundsEnabled) {
             this.style.backgroundColor = '#0ea5e9';
             this.style.borderColor = '#0ea5e9';
-            this.textContent = '🎵 Sonidos Superpuestos';
+            this.textContent = ' Sonidos Superpuestos';
             console.log('Sonidos duales activados');
         } else {
             this.style.backgroundColor = '#6b7280';
             this.style.borderColor = '#6b7280';
-            this.textContent = '🎵 Superponer Sonidos';
+            this.textContent = ' Superponer Sonidos';
             console.log('Sonidos duales desactivados');
         }
     });
@@ -570,6 +571,220 @@ function initializeDualSoundControl() {
             deselectCountry();
         });
     }
+}
+
+// Función para inicializar el control de mapas en paralelo
+function initializeParallelMapsControl() {
+    const parallelMapsToggle = document.getElementById('parallel-maps-toggle');
+    
+    if (!parallelMapsToggle) return;
+    
+    parallelMapsToggle.addEventListener('click', function() {
+        parallelMapsEnabled = !parallelMapsEnabled;
+        
+        if (parallelMapsEnabled) {
+            this.style.backgroundColor = '#0ea5e9';
+            this.style.borderColor = '#0ea5e9';
+            this.style.color = 'white';
+            this.textContent = 'Ocultar Mapas en Paralelo';
+            showParallelMaps();
+        } else {
+            this.style.backgroundColor = 'rgba(14, 165, 233, 0.1)';
+            this.style.borderColor = '#0ea5e9';
+            this.style.color = '#0ea5e9';
+            this.textContent = 'Ver Mapas en Paralelo';
+            hideParallelMaps();
+        }
+    });
+}
+
+// Función para mostrar mapas en paralelo
+function showParallelMaps() {
+    const mainMap = document.getElementById('interactive-map');
+    const parallelContainer = document.getElementById('parallel-maps-container');
+    
+    if (!mainMap || !parallelContainer) return;
+    
+    // Ocultar el mapa principal
+    mainMap.style.display = 'none';
+    
+    // Mostrar el contenedor de mapas en paralelo
+    parallelContainer.style.display = 'block';
+    
+    // Crear los mapas en paralelo
+    createParallelMaps();
+}
+
+// Función para ocultar mapas en paralelo
+function hideParallelMaps() {
+    const mainMap = document.getElementById('interactive-map');
+    const parallelContainer = document.getElementById('parallel-maps-container');
+    
+    if (!mainMap || !parallelContainer) return;
+    
+    // Mostrar el mapa principal
+    mainMap.style.display = 'block';
+    
+    // Ocultar el contenedor de mapas en paralelo
+    parallelContainer.style.display = 'none';
+}
+
+// Función para crear los mapas en paralelo
+function createParallelMaps() {
+    // NO CREAR MAPAS NUEVOS - USAR LOS MAPAS QUE YA EXISTEN
+    // Simplemente copiar el contenido del mapa principal a los contenedores de paralelo
+    
+    const mainMap = document.getElementById('interactive-map');
+    if (!mainMap || !mainMap.data) return;
+    
+    // Obtener los datos del mapa principal
+    const mainData = mainMap.data;
+    const mainLayout = mainMap.layout;
+    
+    // Aplicar filtros de región a los datos
+    const filteredSpending = healthData.map(d => {
+        return isCountryActive(d.Country, d.CODE) ? d.PublicHealthSpendingPerCapita : null;
+    });
+    
+    const filteredLifeExp = healthData.map(d => {
+        return isCountryActive(d.Country, d.CODE) ? d.LifeExpectancy : null;
+    });
+    
+    // Crear el mapa de gasto (vista "Gasto en Salud")
+    const spendingData = [{
+        type: 'choropleth',
+        locationmode: 'ISO-3',
+        locations: mainData[0].locations,
+        z: filteredSpending,
+        text: healthData.map(d => d.Country),
+        colorscale: mainData[0].colorscale,
+        zmin: 0,
+        zmax: 12000,
+        colorbar: {
+            title: 'Gasto Per Cápita ($)',
+            thickness: 20
+        },
+        hovertemplate: '<b>%{text}</b><br>Gasto: $%{z}<extra></extra>'
+    }];
+    
+    // Crear el mapa de esperanza de vida (vista "Esperanza de Vida")
+    const lifeExpData = [{
+        type: 'choropleth',
+        locationmode: 'ISO-3',
+        locations: mainData[0].locations,
+        z: filteredLifeExp,
+        text: healthData.map(d => d.Country),
+        colorscale: [
+            [0, '#f0f9ff'],  // Azul muy claro
+            [0.5, '#fbbf24'], // Amarillo
+            [1, '#dc2626']    // Rojo
+        ],
+        zmin: 50,
+        zmax: 90,
+        colorbar: {
+            title: 'Años',
+            thickness: 20
+        },
+        hovertemplate: '<b>%{text}</b><br>Esperanza de Vida: %{z} años<extra></extra>'
+    }];
+    
+    // Usar el mismo layout que el mapa principal pero con fondo blanco
+    const layout = {
+        geo: {
+            ...mainLayout.geo,
+            bgcolor: 'white',
+            showframe: true,
+            framecolor: '#d1d5db',
+            framewidth: 1
+        },
+        plot_bgcolor: 'white',
+        paper_bgcolor: 'white',
+        margin: { t: 0, b: 0, l: 0, r: 0 },
+        autosize: true,
+        width: null,
+        height: 400
+    };
+    
+    const config = {
+        displayModeBar: false,
+        staticPlot: false,
+        scrollZoom: false,
+        doubleClick: false,
+        showTips: false
+    };
+    
+    // Crear los mapas usando los mismos datos que el mapa principal
+    Promise.all([
+        Plotly.newPlot('spending-map', spendingData, layout, config),
+        Plotly.newPlot('life-expectancy-map', lifeExpData, layout, config)
+    ]).then(() => {
+        // Asegurar que ambos mapas tengan el mismo tamaño
+        Plotly.Plots.resize('spending-map');
+        Plotly.Plots.resize('life-expectancy-map');
+        
+        // Agregar interacciones al mapa de gasto
+        const spendingMapDiv = document.getElementById('spending-map');
+        if (spendingMapDiv) {
+            spendingMapDiv.on('plotly_hover', function(eventData) {
+                const point = eventData.points[0];
+                const countryIndex = point.pointIndex;
+                const countrySpending = healthData[countryIndex].PublicHealthSpendingPerCapita;
+                const countryLifeExp = healthData[countryIndex].LifeExpectancy;
+                const countryName = healthData[countryIndex].Country;
+                
+                // Inicializar audio si es la primera interacción
+                initializeAudio();
+                
+                // Resaltar barra en el gráfico de barras
+                highlightBarInChart(countryName);
+                
+                // Reproducir solo sonidos de gasto para el mapa de gasto
+                if (soundsEnabled) {
+                    const maxSpending = Math.max(...healthData.map(d => d.PublicHealthSpendingPerCapita));
+                    playCoinsSound(countrySpending, maxSpending, countryName);
+                }
+            });
+            
+            spendingMapDiv.on('plotly_unhover', function() {
+                if (!selectedCountry) {
+                    stopAllSounds();
+                    removeBarHighlight();
+                }
+            });
+        }
+        
+        // Agregar interacciones al mapa de esperanza de vida
+        const lifeExpMapDiv = document.getElementById('life-expectancy-map');
+        if (lifeExpMapDiv) {
+            lifeExpMapDiv.on('plotly_hover', function(eventData) {
+                const point = eventData.points[0];
+                const countryIndex = point.pointIndex;
+                const countrySpending = healthData[countryIndex].PublicHealthSpendingPerCapita;
+                const countryLifeExp = healthData[countryIndex].LifeExpectancy;
+                const countryName = healthData[countryIndex].Country;
+                
+                // Inicializar audio si es la primera interacción
+                initializeAudio();
+                
+                // Resaltar barra en el gráfico de barras
+                highlightBarInChart(countryName);
+                
+                // Reproducir solo pitidos de esperanza de vida para el mapa de esperanza de vida
+                if (soundsEnabled) {
+                    const minLife = Math.min(...healthData.map(d => d.LifeExpectancy));
+                    const maxLife = Math.max(...healthData.map(d => d.LifeExpectancy));
+                    playBeepSound(countryLifeExp, minLife, maxLife);
+                }
+            });
+            
+            lifeExpMapDiv.on('plotly_unhover', function() {
+                if (!selectedCountry) {
+                    stopAllSounds();
+                    removeBarHighlight();
+                }
+            });
+        }
+    });
 }
 
 // Función para resaltar barra en el gráfico de barras
@@ -695,7 +910,7 @@ function playBarChartSounds(countryName, countrySpending, countryLifeExp) {
     
     if (dualSoundsEnabled) {
         // Si los sonidos duales están activados, reproducir ambos sonidos superpuestos
-        console.log('🎵 Modo dual activado - reproduciendo ambos sonidos superpuestos');
+        console.log(' Modo dual activado - reproduciendo ambos sonidos superpuestos');
         playCoinsSound(countrySpending, maxSpending, countryName);
         playBeepSound(countryLifeExp, minLife, maxLife);
     } else {
@@ -707,7 +922,7 @@ function playBarChartSounds(countryName, countrySpending, countryLifeExp) {
             console.log('🔊 Reproduciendo solo pitidos');
             playBeepSound(countryLifeExp, minLife, maxLife);
         } else {
-            console.log('🎵 Reproduciendo ambos sonidos (fallback)');
+            console.log(' Reproduciendo ambos sonidos (fallback)');
             playCoinsSound(countrySpending, maxSpending, countryName);
             playBeepSound(countryLifeExp, minLife, maxLife);
         }
@@ -890,6 +1105,14 @@ function initializeFilters() {
                     const country = this.dataset.country;
                     const code = this.dataset.code;
                     
+                    // Cambiar automáticamente el filtro de regiones a "Todas"
+                    selectedRegions = ['all'];
+                    
+                    // Actualizar la apariencia de los botones de filtro
+                    const filterButtons = document.querySelectorAll('.filter-btn[data-region]');
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    filterButtons[0].classList.add('active'); // Botón "Todas"
+                    
                     if (!selectedCountries.includes(country)) {
                         selectedCountries.push(country);
                         updateSelectedCountries();
@@ -978,6 +1201,50 @@ function updateMap() {
     }, {
         geo: geoUpdate
     });
+    
+    // Si los mapas en paralelo están activos, actualizarlos también
+    if (parallelMapsEnabled) {
+        updateParallelMaps();
+    }
+}
+
+// Función para actualizar los mapas en paralelo con los filtros aplicados
+function updateParallelMaps() {
+    if (!parallelMapsEnabled) return;
+    
+    const countries = healthData.map(d => d.CODE);
+    const countryNames = healthData.map(d => d.Country);
+    const spending = healthData.map(d => d.PublicHealthSpendingPerCapita);
+    const lifeExp = healthData.map(d => d.LifeExpectancy);
+    
+    // Aplicar filtros de región a los datos
+    const filteredSpending = spending.map((value, i) => {
+        return isCountryActive(countryNames[i], countries[i]) ? value : null;
+    });
+    
+    const filteredLifeExp = lifeExp.map((value, i) => {
+        return isCountryActive(countryNames[i], countries[i]) ? value : null;
+    });
+    
+    // Aplicar zoom según la región seleccionada
+    const geoUpdate = getRegionZoom();
+    
+    // Actualizar ambos mapas en paralelo
+    Plotly.update('spending-map', {
+        z: [filteredSpending]
+    }, {
+        geo: geoUpdate
+    });
+    
+    Plotly.update('life-expectancy-map', {
+        z: [filteredLifeExp]
+    }, {
+        geo: geoUpdate
+    });
+    
+    // Asegurar que ambos mapas mantengan el mismo tamaño
+    Plotly.Plots.resize('spending-map');
+    Plotly.Plots.resize('life-expectancy-map');
 }
 
 function getRegionZoom() {
@@ -1122,6 +1389,10 @@ fetch('health_data.json')
         console.log('Inicializando control de sonidos duales...');
         return initializeDualSoundControl();
     })
+    .then(() => {
+        console.log('Inicializando control de mapas en paralelo...');
+        return initializeParallelMapsControl();
+    })
     .catch(error => {
         console.error('Error en la inicialización:', error);
     });
@@ -1215,10 +1486,11 @@ function createInteractiveMap(){
             uirevision: 'static'
         },
         margin: { t: 50, b: 10, l: 10, r: 10 },
+        height: 400,
         dragmode: false,
         updatemenus: [{
             type: 'buttons',
-            direction: 'left',
+            direction: 'up',
             x: 0.1,
             y: 1.02,
             showactive: true,
@@ -1552,11 +1824,11 @@ function graficar() {
     const barras = {
         x: paisesOrdenados,
         y: gastoOrdenado,
-        text: esperanzaOrdenada.map((ev, i) => `${paisesOrdenados[i]}<br>Esperanza de vida: ${ev}<br>Gasto per Cápita: ${gastoOrdenado[i]}`),
         type: 'bar',
         marker: {color: coloresBarras},
         name: 'Gasto Salud Per Cápita',
-        hovertemplate: '%{text}<extra></extra>',
+        hovertemplate: '<b>%{x}</b><br>Esperanza de vida: %{customdata}<br>Gasto per Cápita: $%{y}<extra></extra>',
+        customdata: esperanzaOrdenada,
         width: 0.8
     };
 
@@ -1575,7 +1847,8 @@ function graficar() {
         yaxis: {title: 'Gasto Salud Per Cápita (USD)'},
         legend: {x: 0.8, y: 1.1},
         bargap: 0.2,
-        annotations: []
+        annotations: [],
+        height: 400
     };
 
     console.log('=== CREANDO GRÁFICO DE BARRAS ===');
@@ -1585,8 +1858,11 @@ function graficar() {
     
     try {
         Plotly.newPlot('grafico', [barras], layoutBarras, {
-            displayModeBar: true,
-            staticPlot: false
+            displayModeBar: false,
+            staticPlot: false,
+            scrollZoom: false,
+            doubleClick: false,
+            showTips: false
         }).then(() => {
             const graficoDiv = document.getElementById('grafico');
             

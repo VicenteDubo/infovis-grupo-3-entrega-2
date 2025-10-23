@@ -68,7 +68,7 @@ Esta aplicación web interactiva visualiza datos de salud global utilizando mapa
    http://localhost:8000
    ```
 
-## 🎵 Sistema de Sonidos
+##  Sistema de Sonidos
 
 ### **Sonidos de Monedas (Gasto en Salud):**
 - **Estados Unidos**: 350ms + 4 monedas superpuestas + volumen máximo
@@ -102,7 +102,7 @@ Esta aplicación web interactiva visualiza datos de salud global utilizando mapa
 ## 🎛️ Controles
 
 - **🔊 Activar Sonidos**: Habilita/deshabilita todos los sonidos
-- **🎵 Superponer Sonidos**: Activa sonidos duales en el gráfico de barras
+- ** Superponer Sonidos**: Activa sonidos duales en el gráfico de barras
 - **Filtros de Región**: Selecciona continentes específicos
 - **Botones de Vista**: Cambia entre "Gasto en Salud" y "Esperanza de Vida"
 
