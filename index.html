@@ -1,0 +1,175 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis de Salud Global</title>
+    <script src="https://cdn.plot.ly/plotly-2.26.0.min.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .visualization {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .filters {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .filter-section {
+            margin-bottom: 20px;
+        }
+        .filter-section h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .filter-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .filter-btn {
+            padding: 8px 16px;
+            border: 2px solid #ddd;
+            background-color: white;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+        .filter-btn:hover {
+            border-color: #0ea5e9;
+            background-color: #f0f9ff;
+        }
+        .filter-btn.active {
+            border-color: #0ea5e9;
+            background-color: #0ea5e9;
+            color: white;
+        }
+        #country-search {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        #country-search:focus {
+            outline: none;
+            border-color: #0ea5e9;
+        }
+        #country-suggestions {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            display: none;
+        }
+        .country-suggestion {
+            padding: 10px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .country-suggestion:hover {
+            background-color: #f0f9ff;
+        }
+        #selected-countries {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .selected-country-tag {
+            background-color: #0ea5e9;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+        }
+        .remove-country {
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .remove-country:hover {
+            color: #fbbf24;
+        }
+    </style>
+</head>
+<body>
+    
+    <h1> Análisis Global: Gasto en Salud y Esperanza de Vida</h1>
+    
+    <div class="filters">
+        <div class="filter-section">
+            <h3>🌍 Filtrar por Región:</h3>
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-region="all">Todos</button>
+                <button class="filter-btn" data-region="Europe">Europa</button>
+                <button class="filter-btn" data-region="Asia">Asia</button>
+                <button class="filter-btn" data-region="Africa">África</button>
+                <button class="filter-btn" data-region="North America">Norteamérica</button>
+                <button class="filter-btn" data-region="South America">Sudamérica</button>
+                <button class="filter-btn" data-region="Oceania">Oceanía</button>
+            </div>
+        </div>
+        
+        <div class="filter-section">
+            <h3>🔍 Buscar País:</h3>
+            <input type="text" id="country-search" placeholder="Escribe el nombre del país...">
+            <div id="country-suggestions"></div>
+            <div id="selected-countries"></div>
+        </div>
+        
+        <div class="filter-section">
+            <h3>🔊 Control de Sonidos:</h3>
+            <button id="sound-toggle" class="filter-btn" style="background-color: #10b981; color: white; border-color: #10b981;">
+                🔊 Activar Sonidos Interactivos
+            </button>
+            <button id="dual-sound-toggle" class="filter-btn" style="background-color: #6b7280; color: white; border-color: #6b7280; margin-left: 10px;">
+                🎵 Superponer Sonidos
+            </button>
+            <p style="font-size: 12px; color: #666; margin-top: 8px;">
+                Los sonidos se reproducen al pasar el mouse sobre países en los mapas y se sincronizan con el gráfico de barras.<br>
+                <strong>Sonidos superpuestos:</strong> Solo se aplican al gráfico de barras (monedas + pitidos simultáneos)
+            </p>
+        </div>
+    </div>
+    
+    <div class="visualization">
+        <div id="interactive-map"></div>
+    </div>
+    
+    <div class="visualization" style="display: none;">
+        <div id="scatter"></div>
+    </div>
+    
+    <div class="visualization">
+        <div id="grafico"></div>
+    </div>
+    
+    <script src="heartbeat.js"></script>
+    <script src="script.js"></script>
+
+</body>
+</html>
