@@ -56,31 +56,31 @@ class HeartbeatGenerator {
             // Ritmo de emergencia - MUY rápido
             frequency = 1000;
             duration = 0.15;
-            volume = 0.45;
+            volume = 0.5;
             interval = 180; // 180ms - MUY rápido
         } else if (lifeExpectancy >= 52.5 && lifeExpectancy < 55) {
             // Ritmo crítico - muy rápido
             frequency = 950;
             duration = 0.12;
-            volume = 0.4;
+            volume = 0.5;
             interval = 200; // 200ms - muy rápido
         } else if (lifeExpectancy >= 55 && lifeExpectancy < 57.5) {
             // Ritmo acelerado - rápido
             frequency = 900;
             duration = 0.1;
-            volume = 0.38;
+            volume = 0.5;
             interval = 250; // 250ms - rápido
         } else if (lifeExpectancy >= 57.5 && lifeExpectancy < 60) {
             // Ritmo rápido - moderado rápido
             frequency = 850;
             duration = 0.08;
-            volume = 0.35;
+            volume = 0.5;
             interval = 300; // 300ms - moderado rápido
         } else if (lifeExpectancy >= 60 && lifeExpectancy < 62.5) {
             // Ritmo moderado - moderado
             frequency = 800;
             duration = 0.07;
-            volume = 0.32;
+            volume = 0.35;
             interval = 400; // 400ms - moderado
         } else if (lifeExpectancy >= 62.5 && lifeExpectancy < 65) {
             // Ritmo moderado lento - lento

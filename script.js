@@ -41,88 +41,65 @@ function playCoinsSound(spending, maxSpending, countryName = '') {
     // Sistema de rangos muy sensible para diferentes niveles de gasto
     let interval, volume, repetitions;
     
+    // Volumen fijo para todos los casos
+    volume = 0.8; // Volumen constante para todas las monedas
+    
     // Caso especial para Estados Unidos - rápido pero distinguible
     if (countryName === 'United States' || countryName === 'United States of America') {
         console.log('🇺🇸 Estados Unidos - sonido rápido pero distinguible');
-        interval = 300; // 350ms - rápido pero distinguible
-        volume = 1.2; // Volumen amplificado (se amplificará automáticamente)
+        interval = 300; // 300ms - rápido pero distinguible
         repetitions = 2; // sonidos superpuestos para efecto de "lluvia de monedas"
     } else if (spending >= 8000) {
         // Gasto muy alto (8000+): Rápido pero distinguible
         console.log('💎 Gasto muy alto - sonido rápido distinguible');
         interval = 300; // 300ms - rápido pero distinguible
-        volume = 1.1; // Volumen amplificado
         repetitions = 3; // 3 sonidos superpuestos
     } else if (spending >= 5000) {
         // Gasto alto (5000-8000): Moderado rápido
         console.log('💍 Gasto alto - sonido moderado rápido');
         interval = 400; // 400ms - moderado rápido
-        volume = 1.0; // Volumen amplificado
         repetitions = 2; // 2 sonidos superpuestos
     } else if (spending >= 3000) {
         // Gasto medio-alto (3000-5000): Moderado
         console.log('💰 Gasto medio-alto - sonido moderado');
         interval = 500; // 500ms - moderado
-        volume = 0.9; // Volumen amplificado
         repetitions = 1;
     } else if (spending >= 2000) {
         // Gasto medio (2000-3000): Moderado lento
         console.log('🪙 Gasto medio - sonido moderado lento');
         interval = 700; // 700ms - moderado lento
-        volume = 0.6;
         repetitions = 1;
     } else if (spending >= 1000) {
         // Gasto medio-bajo (1000-2000): Lento
         console.log('🪙 Gasto medio-bajo - sonido lento');
         interval = 1000; // 1000ms - lento
-        volume = 0.5;
         repetitions = 1;
     } else if (spending >= 500) {
         // Gasto bajo (500-1000): Muy lento
         console.log('🪙 Gasto bajo - sonido muy lento');
         interval = 1500; // 1500ms - muy lento
-        volume = 0.4;
         repetitions = 1;
     } else if (spending >= 100) {
         // Gasto muy bajo (100-500): Extremadamente lento
         console.log('🪙 Gasto muy bajo - sonido extremadamente lento');
         interval = 2500; // 2500ms - extremadamente lento
-        volume = 0.3;
         repetitions = 1;
     } else {
         // Gasto mínimo (<100): Casi silencio
         console.log('🪙 Gasto mínimo - casi silencio');
         interval = 4000; // 4000ms - casi silencio
-        volume = 0.2;
         repetitions = 1;
     }
     
-    // Función para reproducir sonidos superpuestos con amplificación
+    // Función para reproducir sonidos superpuestos
     const playSound = () => {
         for (let i = 0; i < repetitions; i++) {
             setTimeout(() => {
                 // Crear una nueva instancia de audio para cada repetición
                 const audioInstance = new Audio('coins.wav');
                 audioInstance.currentTime = 0;
-                
-                // Amplificar el volumen más allá de 1.0 usando múltiples instancias
-                if (volume > 0.8) {
-                    // Para volúmenes altos, usar múltiples instancias superpuestas
-                    const amplificationFactor = Math.ceil(volume * 1.5); // Amplificar hasta 1.5x
-                    
-                    for (let j = 0; j < amplificationFactor; j++) {
-            setTimeout(() => {
-                            const amplifiedAudio = new Audio('coins.wav');
-                            amplifiedAudio.volume = Math.min(1.0, volume / amplificationFactor);
-                            amplifiedAudio.currentTime = 0;
-                            amplifiedAudio.play().catch(e => console.log('Error playing amplified coins:', e));
-                        }, j * 10); // Espaciar las amplificaciones 10ms
-                    }
-                } else {
-                    // Para volúmenes normales, usar el método estándar
-                    audioInstance.volume = volume;
-                    audioInstance.play().catch(e => console.log('Error playing coins:', e));
-                }
+                audioInstance.volume = volume; // Volumen constante
+                audioInstance.play().catch(e => console.log('Error playing coins:', e));
             }, i * 50); // Espaciar los sonidos 50ms
         }
     };
@@ -751,6 +728,24 @@ function createParallelMaps() {
                     removeBarHighlight();
                 }
             });
+            
+            // Agregar click para destacar país en el gráfico de barras
+            spendingMapDiv.on('plotly_click', function(eventData) {
+                const point = eventData.points[0];
+                const countryIndex = point.pointIndex;
+                const countryName = healthData[countryIndex].Country;
+                
+                // Destacar el país seleccionado
+                selectedCountry = countryName;
+                highlightBarInChart(countryName);
+                
+                // Reproducir sonido si está habilitado
+                if (soundsEnabled) {
+                    const countrySpending = healthData[countryIndex].PublicHealthSpendingPerCapita;
+                    const maxSpending = Math.max(...healthData.map(d => d.PublicHealthSpendingPerCapita));
+                    playCoinsSound(countrySpending, maxSpending, countryName);
+                }
+            });
         }
         
         // Agregar interacciones al mapa de esperanza de vida
@@ -781,6 +776,25 @@ function createParallelMaps() {
                 if (!selectedCountry) {
                     stopAllSounds();
                     removeBarHighlight();
+                }
+            });
+            
+            // Agregar click para destacar país en el gráfico de barras
+            lifeExpMapDiv.on('plotly_click', function(eventData) {
+                const point = eventData.points[0];
+                const countryIndex = point.pointIndex;
+                const countryName = healthData[countryIndex].Country;
+                
+                // Destacar el país seleccionado
+                selectedCountry = countryName;
+                highlightBarInChart(countryName);
+                
+                // Reproducir sonido si está habilitado
+                if (soundsEnabled) {
+                    const countryLifeExp = healthData[countryIndex].LifeExpectancy;
+                    const minLife = Math.min(...healthData.map(d => d.LifeExpectancy));
+                    const maxLife = Math.max(...healthData.map(d => d.LifeExpectancy));
+                    playBeepSound(countryLifeExp, minLife, maxLife);
                 }
             });
         }
